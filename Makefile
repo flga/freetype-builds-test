@@ -6,7 +6,7 @@ ifeq ("${ARCH}", "386")
 archflags = "-m32"
 endif
 
-version = 2.10.1
+version = 2.8.0
 freetype = freetype-$(version)
 zlib = zlib-1.2.11
 libpng = libpng-1.6.37
