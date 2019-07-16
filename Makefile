@@ -32,7 +32,7 @@ clean-zlib:
 	rm -rf $(build)/zlib
 build-zlib: clean-zlib
 	mkdir -p $(build)/zlib
-	cd src/$(ZLIB) \
+	cd src/$(FTB_ZLIB) \
 		&& CFLAGS=$(archflags) ./configure --prefix=$(build)/zlib --static \
 		&& make \
 		&& make install
@@ -41,7 +41,7 @@ clean-libpng:
 	rm -rf $(build)/libpng
 build-libpng: clean-libpng build-zlib
 	mkdir -p $(build)/libpng
-	cd src/$(LIBPNG) \
+	cd src/$(FTB_LIBPNG) \
 		&& LDFLAGS="-L$(build)/zlib/lib" CFLAGS=$(archflags) CPPFLAGS="-I $(build)/zlib/include $(archflags)" ./configure \
 			--prefix=$(build)/libpng \
 			--enable-static \
@@ -54,7 +54,7 @@ clean-freetype:
 	rm -rf $(build)/freetype
 build-freetype: clean-freetype build-libpng build-zlib
 	mkdir -p $(build)/freetype
-	cd src/$(FREETYPE) \
+	cd src/$(FTB_FREETYPE) \
 		&& PKG_CONFIG_LIBDIR=$(build)/zlib/lib/pkgconfig:$(build)/libpng/lib/pkgconfig CFLAGS=$(archflags) ./configure \
 			--prefix=$(build)/freetype \
 			--enable-static \
@@ -68,7 +68,7 @@ clean-harfbuzz:
 	rm -rf $(build)/harfbuzz
 build-harfbuzz: clean-harfbuzz build-libpng build-zlib build-freetype
 	mkdir -p $(build)/harfbuzz
-	cd src/$(HARFBUZZ) \
+	cd src/$(FTB_HARFBUZZ) \
 		&& autoreconf --force --install \
 		&& PKG_CONFIG_LIBDIR=$(build)/zlib/lib/pkgconfig:$(build)/libpng/lib/pkgconfig:$(build)/freetype/lib/pkgconfig CFLAGS=$(archflags) CXXFLAGS=$(archflags) ./configure \
 			--prefix=$(build)/harfbuzz \
@@ -91,7 +91,7 @@ clean-freetypehb:
 	rm -rf $(build)/freetypehb
 build-freetypehb: clean-freetypehb build-libpng build-zlib build-harfbuzz
 	mkdir -p $(build)/freetypehb
-	cd src/$(FREETYPE) \
+	cd src/$(FTB_FREETYPE) \
 		&& PKG_CONFIG_LIBDIR=$(build)/zlib/lib/pkgconfig:$(build)/libpng/lib/pkgconfig:$(build)/harfbuzz/lib/pkgconfig CFLAGS=$(archflags) ./configure \
 			--prefix=$(build)/freetypehb \
 			--enable-static \
@@ -127,7 +127,7 @@ endif
 
 test-ft:
 	CGO_ENABLED=1 GOOS=$(OS) GOARCH=$(ARCH) go build -tags 'static' $(goldflags) -o static main.go
-	./static $(FT_VERSION)
+	./static $(FTB_VERSION)
 test-ft-hb:
 	CGO_ENABLED=1 GOOS=$(OS) GOARCH=$(ARCH) go build -tags 'static harfbuzz' $(goldflags) -o statichb main.go
-	./statichb $(FT_VERSION)
+	./statichb $(FTB_VERSION)

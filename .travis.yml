@@ -48,7 +48,7 @@ before_deploy: cd ~
 deploy:
   provider: releases
   name: FreeType $TRAVIS_TAG
-  body: $FREETYPE, $ZLIB, $LIBPNG, $HARFBUZZ
+  body: $FTB_FREETYPE, $FTB_ZLIB, $FTB_LIBPNG, $FTB_HARFBUZZ
   prerelease: true
   overwrite: true
   skip_cleanup: true
