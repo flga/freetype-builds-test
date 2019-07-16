@@ -6,12 +6,6 @@ ifeq ("${ARCH}", "386")
 archflags = "-m32"
 endif
 
-version = 2.8.0
-freetype = freetype-$(version)
-zlib = zlib-1.2.11
-libpng = libpng-1.6.37
-harfbuzz = harfbuzz-2.5.3
-
 define freetype_ar_script
 create libfreetype.a
 addlib $(build)/zlib/lib/libz.a
@@ -38,7 +32,7 @@ clean-zlib:
 	rm -rf $(build)/zlib
 build-zlib: clean-zlib
 	mkdir -p $(build)/zlib
-	cd src/$(zlib) \
+	cd src/$(ZLIB) \
 		&& CFLAGS=$(archflags) ./configure --prefix=$(build)/zlib --static \
 		&& make \
 		&& make install
@@ -47,7 +41,7 @@ clean-libpng:
 	rm -rf $(build)/libpng
 build-libpng: clean-libpng build-zlib
 	mkdir -p $(build)/libpng
-	cd src/$(libpng) \
+	cd src/$(LIBPNG) \
 		&& LDFLAGS="-L$(build)/zlib/lib" CFLAGS=$(archflags) CPPFLAGS="-I $(build)/zlib/include $(archflags)" ./configure \
 			--prefix=$(build)/libpng \
 			--enable-static \
@@ -60,7 +54,7 @@ clean-freetype:
 	rm -rf $(build)/freetype
 build-freetype: clean-freetype build-libpng build-zlib
 	mkdir -p $(build)/freetype
-	cd src/$(freetype) \
+	cd src/$(FREETYPE) \
 		&& PKG_CONFIG_LIBDIR=$(build)/zlib/lib/pkgconfig:$(build)/libpng/lib/pkgconfig CFLAGS=$(archflags) ./configure \
 			--prefix=$(build)/freetype \
 			--enable-static \
@@ -74,7 +68,7 @@ clean-harfbuzz:
 	rm -rf $(build)/harfbuzz
 build-harfbuzz: clean-harfbuzz build-libpng build-zlib build-freetype
 	mkdir -p $(build)/harfbuzz
-	cd src/$(harfbuzz) \
+	cd src/$(HARFBUZZ) \
 		&& autoreconf --force --install \
 		&& PKG_CONFIG_LIBDIR=$(build)/zlib/lib/pkgconfig:$(build)/libpng/lib/pkgconfig:$(build)/freetype/lib/pkgconfig CFLAGS=$(archflags) CXXFLAGS=$(archflags) ./configure \
 			--prefix=$(build)/harfbuzz \
@@ -97,7 +91,7 @@ clean-freetypehb:
 	rm -rf $(build)/freetypehb
 build-freetypehb: clean-freetypehb build-libpng build-zlib build-harfbuzz
 	mkdir -p $(build)/freetypehb
-	cd src/$(freetype) \
+	cd src/$(FREETYPE) \
 		&& PKG_CONFIG_LIBDIR=$(build)/zlib/lib/pkgconfig:$(build)/libpng/lib/pkgconfig:$(build)/harfbuzz/lib/pkgconfig CFLAGS=$(archflags) ./configure \
 			--prefix=$(build)/freetypehb \
 			--enable-static \
@@ -133,7 +127,7 @@ endif
 
 test-ft:
 	CGO_ENABLED=1 GOOS=$(OS) GOARCH=$(ARCH) go build -tags 'static' $(goldflags) -o static main.go
-	./static $(version)
+	./static $(FT_VERSION)
 test-ft-hb:
 	CGO_ENABLED=1 GOOS=$(OS) GOARCH=$(ARCH) go build -tags 'static harfbuzz' $(goldflags) -o statichb main.go
-	./statichb $(version)
+	./statichb $(FT_VERSION)

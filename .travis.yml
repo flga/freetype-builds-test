@@ -42,14 +42,13 @@ script:
   if [ "$TRAVIS_BRANCH" == "dev" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
     exit 0
   fi
-  
+  source version.sh
   make dist test-ft test-ft-hb OS=$(go env GOHOSTOS)
 before_deploy: cd ~
 deploy:
   provider: releases
-  draft: true
   name: FreeType $TRAVIS_TAG
-  body: hello
+  body: $FREETYPE, $ZLIB, $LIBPNG, $HARFBUZZ
   prerelease: true
   overwrite: true
   skip_cleanup: true

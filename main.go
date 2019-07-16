@@ -59,7 +59,7 @@ func main() {
 		return
 	}
 
-	fmt.Println("OK")
+	fmt.Printf("OK - (got  %d.%d.%d)\n", int(amajor), int(aminor), int(apatch))
 }
 
 func parse(s string) (int, int, int, error) {
