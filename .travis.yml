@@ -38,7 +38,12 @@ branches:
 matrix:
   fast_finish: true
 script:
-- make dist test-ft test-ft-hb OS=$(go env GOHOSTOS)
+- |
+  if [ "$TRAVIS_BRANCH" == "dev" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+    exit 0
+  fi
+  
+  make dist test-ft test-ft-hb OS=$(go env GOHOSTOS)
 before_deploy: cd ~
 deploy:
   provider: releases
