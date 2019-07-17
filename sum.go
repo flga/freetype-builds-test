@@ -14,7 +14,8 @@ func main() {
 		return
 	}
 
-	data, err := sum(os.Args[1])
+	path := os.Args[1]
+	data, err := sum(path)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
@@ -26,7 +27,7 @@ func main() {
 		return
 	}
 
-	fmt.Printf("%x\n", data)
+	fmt.Printf("SHA256 %x %s\n", data, path)
 }
 
 func sum(path string) ([]byte, error) {
