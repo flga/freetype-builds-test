@@ -18,12 +18,21 @@ create libfreetypehb.a
 addlib $(build)/zlib/lib/libz.a
 addlib $(build)/libpng/lib/libpng16.a
 addlib $(build)/harfbuzz/lib/libharfbuzz.a
+addlib $(build)/freetype/lib/libfreetype.a
+save
+endef
+define freetypehbss_ar_script
+create libfreetypehb-subset.a
+addlib $(build)/zlib/lib/libz.a
+addlib $(build)/libpng/lib/libpng16.a
+addlib $(build)/harfbuzz/lib/libharfbuzz.a
 addlib $(build)/harfbuzz/lib/libharfbuzz-subset.a
 addlib $(build)/freetype/lib/libfreetype.a
 save
 endef
 export freetype_ar_script
 export freetypehb_ar_script
+export freetypehbss_ar_script
 
 ifeq ("${OS}", "linux")
 goldflags = -ldflags "-linkmode external -extldflags -static"
@@ -113,6 +122,7 @@ dist: build clean-dist
 ifeq ("${OS}", "linux")
 	cd $(dist)/lib && echo "$$freetype_ar_script" | ar -M
 	cd $(dist)/lib && echo "$$freetypehb_ar_script" | ar -M 
+	cd $(dist)/lib && echo "$$freetypehbss_ar_script" | ar -M 
 endif
 ifeq ("${OS}", "darwin")
 	libtool -static -o $(dist)/lib/libfreetype.a \
@@ -120,6 +130,11 @@ ifeq ("${OS}", "darwin")
 		$(build)/libpng/lib/libpng16.a \
 		$(build)/freetype/lib/libfreetype.a
 	libtool -static -o $(dist)/lib/libfreetypehb.a \
+		$(build)/zlib/lib/libz.a \
+		$(build)/libpng/lib/libpng16.a \
+		$(build)/harfbuzz/lib/libharfbuzz.a \
+		$(build)/freetype/lib/libfreetype.a
+	libtool -static -o $(dist)/lib/libfreetypehb-subset.a \
 		$(build)/zlib/lib/libz.a \
 		$(build)/libpng/lib/libpng16.a \
 		$(build)/harfbuzz/lib/libharfbuzz.a \
@@ -134,3 +149,8 @@ test-ft:
 test-ft-hb:
 	CGO_ENABLED=1 GOOS=$(OS) GOARCH=$(ARCH) go build -tags 'static harfbuzz' $(goldflags) -o statichb main.go
 	./statichb $(FTB_VERSION)
+test-ft-hb-subset:
+	CGO_ENABLED=1 GOOS=$(OS) GOARCH=$(ARCH) go build -tags 'static harfbuzz subset' $(goldflags) -o statichb-subset main.go
+	./statichb-subset $(FTB_VERSION)
+
+test: test-ft test-ft-hb test-ft-hb-subset
