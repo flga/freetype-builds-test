@@ -44,11 +44,12 @@ script:
   fi
   source version.sh
   make dist test-ft test-ft-hb OS=$(go env GOHOSTOS)
+  echo SHA256 - $($HOME/$OS_$ARCH.zip)
 before_deploy: cd ~
 deploy:
   provider: releases
   name: FreeType $TRAVIS_TAG
-  body: "This is a release for FreeType $FTB_VERSION. Library versions: $FTB_FREETYPE, $FTB_ZLIB, $FTB_LIBPNG, $FTB_HARFBUZZ"
+  body: "This is a release for FreeType $FTB_VERSION, which includes $FTB_FREETYPE, $FTB_ZLIB, $FTB_LIBPNG, $FTB_HARFBUZZ. Checksums are in the build log at $TRAVIS_BUILD_WEB_URL"
   prerelease: true
   overwrite: true
   skip_cleanup: true
