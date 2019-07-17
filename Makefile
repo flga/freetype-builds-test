@@ -18,6 +18,7 @@ create libfreetypehb.a
 addlib $(build)/zlib/lib/libz.a
 addlib $(build)/libpng/lib/libpng16.a
 addlib $(build)/harfbuzz/lib/libharfbuzz.a
+addlib $(build)/harfbuzz/lib/libharfbuzz-subset.a
 addlib $(build)/freetype/lib/libfreetype.a
 save
 endef
@@ -122,6 +123,7 @@ ifeq ("${OS}", "darwin")
 		$(build)/zlib/lib/libz.a \
 		$(build)/libpng/lib/libpng16.a \
 		$(build)/harfbuzz/lib/libharfbuzz.a \
+		$(build)/harfbuzz/lib/libharfbuzz-subset.a \
 		$(build)/freetype/lib/libfreetype.a
 endif
 	cd $(dist) && zip -r $(HOME)/$(OS)_$(ARCH).zip .
