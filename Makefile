@@ -92,6 +92,7 @@ clean-freetypehb:
 build-freetypehb: clean-freetypehb build-libpng build-zlib build-harfbuzz
 	mkdir -p $(build)/freetypehb
 	cd src/$(FTB_FREETYPE) \
+		&& make clean \
 		&& PKG_CONFIG_LIBDIR=$(build)/zlib/lib/pkgconfig:$(build)/libpng/lib/pkgconfig:$(build)/harfbuzz/lib/pkgconfig CFLAGS=$(archflags) ./configure \
 			--prefix=$(build)/freetypehb \
 			--enable-static \
