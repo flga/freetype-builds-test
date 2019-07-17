@@ -17,7 +17,6 @@ addons:
     - pkg-config
   homebrew:
     packages:
-    - coreutils
     - bzr
     - procps
     - g++
@@ -46,7 +45,7 @@ script:
   source version.sh
   make dist test OS=$(go env GOHOSTOS)
 before_deploy: | 
-  echo SHA256 - $(sha256sum $HOME/$(go env GOHOSTOS)_$ARCH.zip)
+  echo SHA256 - $(go run sum.go $HOME/$(go env GOHOSTOS)_$ARCH.zip)
   cd ~
 deploy:
   provider: releases
