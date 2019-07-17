@@ -50,9 +50,7 @@ before_deploy: |
 deploy:
   provider: releases
   name: FreeType $TRAVIS_TAG
-  body: | 
-    This is a release for FreeType $FTB_VERSION, which includes $FTB_FREETYPE, $FTB_ZLIB, $FTB_LIBPNG, $FTB_HARFBUZZ.
-    Checksums are in the build logs of the respective os/arch at $TRAVIS_BUILD_WEB_URL (towards the end, in the before_deploy section)".
+  body: "This is a release for FreeType $FTB_VERSION, which includes $FTB_FREETYPE, $FTB_ZLIB, $FTB_LIBPNG, $FTB_HARFBUZZ. Checksums are in the build logs of the respective os/arch at $TRAVIS_BUILD_WEB_URL (towards the end, in the before_deploy section)"
   prerelease: true
   overwrite: true
   skip_cleanup: true
