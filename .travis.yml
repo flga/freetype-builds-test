@@ -44,7 +44,7 @@ script:
   fi
   source version.sh
   make dist test-ft test-ft-hb OS=$(go env GOHOSTOS)
-  echo SHA256 - $(sha256sum $HOME/$OS_$ARCH.zip)
+  echo SHA256 - $(sha256sum $HOME/${OS}_${ARCH}.zip)
 before_deploy: cd ~
 deploy:
   provider: releases
